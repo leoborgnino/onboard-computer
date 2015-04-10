@@ -1,6 +1,8 @@
-import UART
+import Comunicacion
 import time
 
-com = UART.UART('/dev/ttyS0',115200)
-
+com = Comunicacion.Comunicacion('/dev/ttyS0',115200)
+com.open()
 com.send("defghijklmn",10)
+time.sleep(5)
+com.close()

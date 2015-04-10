@@ -28,6 +28,9 @@ class ThreadHandler(threading.Thread):
 
     def stop_thread(self):
         self.onoff = False
-        
-
+    	if self.isAlive():
+        	try:
+            		self._Thread__stop()
+        	except:
+            		print(str(self.getName()) + ' could not be terminated')	
 

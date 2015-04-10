@@ -1,6 +1,6 @@
 import serial
-from Protocolo import Protocolo
-import ThreadHandler
+import Protocolo
+
 
 class UART:
 
@@ -8,6 +8,7 @@ class UART:
 		self.__ser = serial.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)
 		self.__ser.close()
 		self.__ser.open()
+		self.prot = Protocolo.Protocolo()
 		self.__flag_in_frame     = False
                 self.__flag_flen         = False
                 self.__flen              = 0
@@ -16,7 +17,7 @@ class UART:
 			print 'Error'
 
 	def send(self,data,device):
-		self.__ser.write(self.Protocolo.encode(device,data))
+		self.__ser.write(self.prot.encode(device,data))
 
 	def receive(self):
 	
@@ -28,7 +29,7 @@ class UART:
         		in_data_1      = in_data_0+self.__ser.read(self.__ser.inWaiting())
         		self.__in_data = self.__in_data+[ord(n) for n in in_data_1]
 	
-        		#print "Datos de entrada:", self.__in_data
+   			print "Datos de entrada:", self.__in_data
 	
         		### Si no estamos procesando una trama se busca el Marcador de
         		### Inicio de Trama (MIT).
