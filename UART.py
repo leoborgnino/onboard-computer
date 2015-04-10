@@ -1,5 +1,6 @@
 import serial
-import Protocolo
+from Protocolo import Protocolo
+import ThreadHandler
 
 class UART:
 
@@ -7,8 +8,6 @@ class UART:
 		self.__ser = serial.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)
 		self.__ser.close()
 		self.__ser.open()
-		self.prot = Protocolo.Protocolo()
-                self.hilo_recepcion = ThreadHandler(self.UART.receive,"Hilo de Recepcion de datos")
 		self.__flag_in_frame     = False
                 self.__flag_flen         = False
                 self.__flen              = 0
@@ -17,7 +16,7 @@ class UART:
 			print 'Error'
 
 	def send(self,data,device):
-		self.__ser.write(self.prot.encode(device,data))
+		self.__ser.write(self.Protocolo.encode(device,data))
 
 	def receive(self):
 	
