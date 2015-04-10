@@ -8,7 +8,8 @@ class UART:
 		self.__ser.close()
 		self.__ser.open()
 		self.prot = Protocolo.Protocolo()
-                self.__flag_in_frame     = False
+                self.hilo_recepcion = ThreadHandler(self.UART.receive,"Hilo de Recepcion de datos")
+		self.__flag_in_frame     = False
                 self.__flag_flen         = False
                 self.__flen              = 0
                 self.__in_data           = []
@@ -19,7 +20,7 @@ class UART:
 		self.__ser.write(self.prot.encode(device,data))
 
 	def receive(self):
-		
+	
 		self.recibido = 0
 		while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
@@ -39,12 +40,11 @@ class UART:
         	        	self.__flag_in_frame = True
         	    	else:
         	        	self.__in_data       = []
-	
-		        ### Si encontramos un MIT y no tenemos la longitud de la trama
-		        ### aguardamos hasta tener al menos  3 octetos para extraer el
+			        ### Si encontramos un MIT y no tenemos la longitud de la trama
+	        	### aguardamos hasta tener al menos  3 octetos para extraer el
 		        ### parametro de longitud.
 		        if self.__flag_in_frame==True and self.__flag_flen==False and len(self.__in_data)>=3:
-		            if self.__in_data[0]&0x10:
+		       	    if self.__in_data[0]&0x10:
 		                self.__flen          = ((self.__in_data[0]&0xF)<<16) + \
 		                                        (self.__in_data[1]<<8)       + \
 		                                         self.__in_data[2]
@@ -57,7 +57,7 @@ class UART:
 		        ### cola del usuario
         		if self.__flag_in_frame==True and self.__flag_flen==True and len(self.__in_data)>= \
 											  (self.__flen+5):
-		            #self.__from_target_queue.put(self.__in_data[0:(self.__flen+5)])
+		            self.__from_target_queue.put(self.__in_data[0:(self.__flen+5)])
 		            self.datos = self.__in_data[4:(self.__flen+4)]
 		            self.__in_data      = self.__in_data[(self.__flen+5):]
 		            self.__flag_in_fame = False
