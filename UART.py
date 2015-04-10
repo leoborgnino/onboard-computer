@@ -63,7 +63,8 @@ class UART:
 		            self.__flag_flen    = False
 		            self.__flen         = 0
 		            self.recibido 	= 1
-			    return self.datos
+			    print self.datos
+                            return self.datos
 
 		            
 		     		
