@@ -1,5 +1,4 @@
 import serial
-import Protocolo
 
 
 class UART:
@@ -8,7 +7,6 @@ class UART:
 		self.__ser = serial.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)
 		self.__ser.close()
 		self.__ser.open()
-		self.prot = Protocolo.Protocolo()
 		self.__flag_in_frame     = False
                 self.__flag_flen         = False
                 self.__flen              = 0
@@ -17,10 +15,26 @@ class UART:
 			print 'Error'
 
 	def send(self,data,device):
-		self.__ser.write(self.prot.encode(device,data))
-
-	def receive(self):
+		header = 160;
+		iheader = 64;
+		data_len = len(data)
+		if data_len>2**20:
+			return []
+		else:
+			PL = 16
+			mod_header = header + PL + ((data_len & 0xf0000)>>16)
+			mod_iheader = 64
+			size_l = data_len & 0xff
+			size_h = (data_len & 0xff00)>>8
+			if type(data)==list:
+				lista = [mod_header,size_h,size_l,device]+data+[mod_iheader]
+			else:
+				lista = [mod_header,size_h,size_l,device]+[data]+[mod_iheader]
+			print lista
+			self.__ser.write(lista)			
 	
+	
+	def receive(self):
 		self.recibido = 0
 		while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
