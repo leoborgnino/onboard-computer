@@ -1,4 +1,5 @@
 import threading
+import Queue
 import time
 import sys
 
@@ -9,20 +10,21 @@ import UART
 class Comunicacion():
 
 	def __init__(self,dev,baud_rate):
-		
-		self.uart =UART.UART(dev,baud_rate)
-		self.hilo_recepcion = ThreadHandler(self.uart.receive, "Hilo de recepcion")
-		#Aca irian proximos hilos						
-	
-	def send(self,dato,dev):
-		self.uart.send(dato,dev)
-	
-	def open(self):
-	        self.hilo_recepcion.start()
-        	time.sleep(0.05)
-       
-    	def close(self):
-		self.hilo_recepcion.stop_thread()
-		time.sleep(0.05)          
+		self.__uart =UART.UART(dev,baud_rate)
+		self.__scheduler = Scheduler.Scheduler()
+		self.q_envio = Queue.Queue()
+			
 
+	def send(self):
+		if(!(self.q_envio.empty())):
+			self.dato = q_envio.get()
+			self.uart.send(dato)
+	
+	def receive(self):
+		self.uart.receive()	
 
+	def reg(self,x):
+		return self.__scheduler.reg(x)
+	
+	def txfifo(self,dato):
+		q.put(dato)
