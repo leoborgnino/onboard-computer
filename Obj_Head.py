@@ -1,9 +1,9 @@
-class Obj_Head:
+class Obj_Head():
 
-	self.__uid 	= 0
-	self.__txfifo   = 0
+	__uid 	= 0
+	__txfifo   = 0
 
-	def __init__():
+	def __init__(self):
 		self.set_uid(com.reg(self.method))
 		self.set_txfifo(com.txfifo)
 	
@@ -14,5 +14,5 @@ class Obj_Head:
 		self.__txfifo = txfifo
 	
 	def send(self,datos):
-		self.__txfifo(datos)
+		self.__txfifo(datos,self.uid)
 		

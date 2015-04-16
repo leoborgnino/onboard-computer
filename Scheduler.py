@@ -2,7 +2,7 @@ class Scheduler:
 	self.__contador_id = -1
 	self.__obj = []
 
-	def __init__():
+	def __init__(self):
 		pass
 
 	def reg(self,method):

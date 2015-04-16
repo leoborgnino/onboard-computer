@@ -1,21 +1,23 @@
 import Comunicacion
 import time
 import threading
+import Planing
 
 com = Comunicacion.Comunicacion('/dev/ttyS0',115200)
 com.open()
 
-self.hilo_recepcion = ThreadHandler(com.receive, "Hilo de recepcion")
-self.hilo_envio = ThreadHandler(com.send, "Hilo de envio")
+hilo_recepcion = ThreadHandler(com.receive, "Hilo de recepcion")
+hilo_envio = ThreadHandler(com.send, "Hilo de envio")
 open_threads()
-com.send("defghijklmn",10)
-time.sleep(5)
-com.close()
-	
+pl = Planing()
+Planing.run()
+com.txfifo("defghijklmn")
+time.sleep(5)	
+close_threads()
 
 def open_threads(self):
-        self.hilo_recepcion.start()
-       	time.sleep(0.05)
+	self.hilo_recepcion.start()
+	time.sleep(0.05)
 	self.hilo_envio.start()
 	time.sleep(0.05)       
 

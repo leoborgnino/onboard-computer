@@ -14,10 +14,13 @@ class UART:
 		if not self.__ser.isOpen():
 			print 'Error'
 
-	def send(self,data,device):
+	def send(self,data,scheduler):
+		device = 10
 		header = 160;
 		iheader = 64;
 		data_len = len(data)
+		data[data_len - 1] = uid
+		data.remove(data_len - 1)
 		if data_len>2**20:
 			return []
 		else:
@@ -27,9 +30,9 @@ class UART:
 			size_l = data_len & 0xff
 			size_h = (data_len & 0xff00)>>8
 			if type(data)==list:
-				lista = [mod_header,size_h,size_l,device]+data+[mod_iheader]
+				lista = [mod_header,size_h,size_l,device,uid]+data+[mod_iheader]
 			else:
-				lista = [mod_header,size_h,size_l,device]+[data]+[mod_iheader]
+				lista = [mod_header,size_h,size_l,device,uid]+[data]+[mod_iheader]
 			print lista
 			self.__ser.write(lista)			
 	
@@ -70,16 +73,16 @@ class UART:
 		        ### misma se  espera el resto  de la trama  y se coloca  en la
 		        ### cola del usuario
         		if self.__flag_in_frame==True and self.__flag_flen==True and len(self.__in_data)>= \
-											  (self.__flen+5):
-		            self.__from_target_queue.put(self.__in_data[0:(self.__flen+5)])
-		            self.datos = self.__in_data[4:(self.__flen+4)]
-		            self.__in_data      = self.__in_data[(self.__flen+5):]
+											  (self.__flen+6):
+		            self.datos = self.__in_data[3:(self.__flen+5)]
+		            self.__in_data      = self.__in_data[(self.__flen+6):]
 		            self.__flag_in_fame = False
 		            self.__flag_flen    = False
 		            self.__flen         = 0
-		            self.recibido 	= 1
+		            self.recibido 		= 1
 			    print self.datos
-                            return self.datos
+			    self.scheduler.mngr(self.datos)
+                            
 
 		            
 		     		
