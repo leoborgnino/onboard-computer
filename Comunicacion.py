@@ -21,7 +21,7 @@ class Comunicacion():
 			self.uart.send(dato)
 	
 	def receive(self):
-		self.uart.receive(self.__scheduler)	
+		self.uart.receive(self.__scheduler.mngr)	
 
 	def reg(self,x):
 		return self.__scheduler.reg(x)

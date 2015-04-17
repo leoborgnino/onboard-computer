@@ -37,7 +37,7 @@ class UART:
 			self.__ser.write(lista)			
 	
 	
-	def receive(self):
+	def receive(self,method):
 		self.recibido = 0
 		while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
@@ -74,14 +74,16 @@ class UART:
 		        ### cola del usuario
         		if self.__flag_in_frame==True and self.__flag_flen==True and len(self.__in_data)>= \
 											  (self.__flen+6):
-		            self.datos = self.__in_data[3:(self.__flen+5)]
+		            self.datos = self.__in_data[5:(self.__flen+5)]
+                            self.uid = self.__in_data[3]
+                            self.device = self.__in_data[4]
 		            self.__in_data      = self.__in_data[(self.__flen+6):]
 		            self.__flag_in_fame = False
 		            self.__flag_flen    = False
 		            self.__flen         = 0
 		            self.recibido 		= 1
 			    print self.datos
-			    self.scheduler.mngr(self.datos)
+                            method(self.uid,self.datos)
                             
 
 		            
