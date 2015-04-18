@@ -2,6 +2,23 @@
 from math import *
 import random
 from Obj_Head import Obj_Head
+import plan
+
+class Planing(Obj_Head):
+	def __init__(self,com):
+		self.grid		=   [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+			     	             [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+		     		             [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+			        	     [0, 0, 0, 1, 0, 1, 1, 1, 1, 1],
+			            	     [0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+			 	     	     [0, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+				             [1, 1, 0, 1, 0, 1, 1, 1, 1, 1],
+	                     	    	     [0, 0, 0, 1, 0, 1, 1, 1, 1, 1],
+			             	     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+			             	     [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			           	     [0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
+			 	     	     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
+	                     	     	     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
 
 
 class Planing(Obj_Head):
@@ -29,7 +46,14 @@ class Planing(Obj_Head):
 			                     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
 			                     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
 	                     	             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
-            #Obj_Head.__init__(self)
+
+		self.goal = [0, 0]
+		self.init = [len(self.grid)-1, len(self.grid[0])-1]
+		self.tita = 0
+		self.contador = 0	
+		Obj_Head.__init__(self,com,self.flag)
+		self.path = plan.plan(self.grid,self.init,self.goal)		
+		self.flag = 0
 	
 	def run(self):
 		self.path.astar()
@@ -41,8 +65,11 @@ class Planing(Obj_Head):
 			if self.rotacion < -180:
 				self.rotacion = self.rotacion + 360
 		
-			self.send(paso)			
-			self.send(rotacion)
+			self.send(self.paso)			
+			self.send(self.rotacion)
+			while not self.flag:
+				pass
+			self.flag = 0
 			#print("%s.Rotar %s grados" % (i,rotacion))
 			#print 'Adelante 30 cm'
 			#print("%s.Enviado: %s" % (i,rotacion) )
@@ -52,3 +79,5 @@ class Planing(Obj_Head):
 				self.tita = 0
 			if self.tita < -1:
 				self.tita = 3	
+	def flag(self):
+		self.__flag = 1

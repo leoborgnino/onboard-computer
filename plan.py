@@ -1,8 +1,8 @@
 class plan:
 			
-	self.steering_noise    = 0.1
-	self.distance_noise    = 0.03
-	self.measurement_noise = 0.3
+	steering_noise    = 0.1
+	distance_noise    = 0.03
+	measurement_noise = 0.3
 
 	def __init__(self, grid, init,goal, cost = 1):
 	        self.cost = cost
@@ -12,21 +12,18 @@ class plan:
 	        self.make_heuristic(grid, goal, self.cost)
 	        self.path = []
 	        self.spath = []
-		    self.action = []
+	        self.action = []
 
     # --------
     #
     # Crea la funcion heuristica para el grid
        
-	def make_heuristic(self, grid, goal, cost):
-		self.heuristic = [[0 for row in range(len(grid[0]))] 
-			for col in range(len(grid))]
-	        for i in range(len(self.grid)):    
-	            for j in range(len(self.grid[0])):
-	                self.heuristic[i][j] = abs(i - self.goal[0]) + \
-	                    abs(j - self.goal[1])
-	
 
+	def make_heuristic(self, grid, goal, cost):
+		self.heuristic = [[0 for row in range(len(grid[0]))]for col in range(len(grid))]
+		for i in range(len(self.grid)):   
+			for j in range(len(self.grid[0])):
+				self.heuristic[i][j] = abs(i - self.goal[0]) +abs(j - self.goal[1]) 
 
     # ------------------------------------------------
     # 
@@ -35,8 +32,6 @@ class plan:
     #
 
 	def astar(self):
-
-
 	        if self.heuristic == []:
 	            raise ValueError, "Heuristica debe estar definida para ejecutar A*"
 
@@ -88,7 +83,7 @@ class plan:
 	
 	            # chequeamos si encontramos el objetivo
 	
-	            if x == goal[0] and y == goal[1]:
+	            if x == self.goal[0] and y == self.goal[1]:
 	                found = True
 	                # print '###### A* Busqueda Realizada'
 	

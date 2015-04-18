@@ -6,6 +6,7 @@ import sys
 
 from ThreadHandler import ThreadHandler
 import UART
+import Scheduler
 
 class Comunicacion():
 
@@ -17,15 +18,21 @@ class Comunicacion():
 
 	def send(self):
 		if not (self.q_envio.empty()):
-			self.dato = q_envio.get()
-			self.uart.send(dato)
+			self.dato = self.q_envio.get()
+			self.__uart.send(self.dato)
 	
 	def receive(self):
+<<<<<<< HEAD
+		self.__uart.receive(self.__scheduler)	
+=======
 		self.uart.receive(self.__scheduler.mngr)	
+>>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
 
 	def reg(self,x):
 		return self.__scheduler.reg(x)
 	
 	def txfifo(self,dato,uid):
-		dato = dato.append(uid)		
-		self.q_envio.put()
+		lista = []
+		lista.append(dato)
+		lista.append(uid)		
+		self.q_envio.put(lista)

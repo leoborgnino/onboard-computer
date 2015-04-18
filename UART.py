@@ -14,13 +14,13 @@ class UART:
 		if not self.__ser.isOpen():
 			print 'Error'
 
-	def send(self,data,scheduler):
+	def send(self,data):
 		device = 10
 		header = 160;
 		iheader = 64;
 		data_len = len(data)
-		data[data_len - 1] = uid
-		data.remove(data_len - 1)
+		uid = data.pop(data_len - 1)
+		data_len = len(data)
 		if data_len>2**20:
 			return []
 		else:
@@ -37,7 +37,11 @@ class UART:
 			self.__ser.write(lista)			
 	
 	
+<<<<<<< HEAD
+	def receive(self,scheduler):
+=======
 	def receive(self,method):
+>>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
 		self.recibido = 0
 		while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
@@ -83,7 +87,11 @@ class UART:
 		            self.__flen         = 0
 		            self.recibido 		= 1
 			    print self.datos
+<<<<<<< HEAD
+			    scheduler.mngr(self.datos)
+=======
                             method(self.uid,self.datos)
+>>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
                             
 
 		            
