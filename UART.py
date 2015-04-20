@@ -33,15 +33,20 @@ class UART:
 				lista = [mod_header,size_h,size_l,device,uid]+data+[mod_iheader]
 			else:
 				lista = [mod_header,size_h,size_l,device,uid]+[data]+[mod_iheader]
+			#lista = []
+			#lista.append(mod_header)
+			#lista.append(size_h)
+			#lista.append(size_l)
+			#lista.append(device)
+			#lista.append(uid)
+			#for i in range(data_len):
+			#	lista.append(data[i])
+			#lista.append(mod_iheader)
 			print lista
 			self.__ser.write(lista)			
 	
 	
-<<<<<<< HEAD
-	def receive(self,scheduler):
-=======
 	def receive(self,method):
->>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
 		self.recibido = 0
 		while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
@@ -87,11 +92,7 @@ class UART:
 		            self.__flen         = 0
 		            self.recibido 		= 1
 			    print self.datos
-<<<<<<< HEAD
-			    scheduler.mngr(self.datos)
-=======
                             method(self.uid,self.datos)
->>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
                             
 
 		            

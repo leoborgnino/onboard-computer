@@ -22,17 +22,15 @@ class Comunicacion():
 			self.__uart.send(self.dato)
 	
 	def receive(self):
-<<<<<<< HEAD
-		self.__uart.receive(self.__scheduler)	
-=======
-		self.uart.receive(self.__scheduler.mngr)	
->>>>>>> ddbfb7f887bc428be646e20169b9a6e57746bf69
+		self.__uart.receive(self.__scheduler.mngr)	
 
 	def reg(self,x):
 		return self.__scheduler.reg(x)
 	
 	def txfifo(self,dato,uid):
 		lista = []
-		lista.append(dato)
+		for i in range(len(dato)):
+			for j in range(len(dato[i])):
+				lista.append(dato[i][j])
 		lista.append(uid)		
 		self.q_envio.put(lista)

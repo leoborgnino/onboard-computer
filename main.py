@@ -3,7 +3,7 @@ import time
 import threading
 import Planing
 import ThreadHandler
-
+import pruebaserver
 
 def open_threads():
 	hilo_recepcion.start()
@@ -22,8 +22,9 @@ hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
 open_threads()
 pl = Planing.Planing(com)
+#web = pruebaserver.index(com)
 pl.run()
-com.txfifo("defghijklmn")
+#com.txfifo("defghijklmn")
 time.sleep(5)	
 close_threads()
 
