@@ -52,8 +52,9 @@ class UART:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
         		### timeout si fue seteado.
         		in_data_0      = self.__ser.read()
-        		in_data_1      = in_data_0+self.__ser.read(self.__ser.inWaiting())
-        		self.__in_data = self.__in_data+[ord(n) for n in in_data_1]
+        		in_data_1      = in_data_0 + self.__ser.read(self.__ser.inWaiting())
+        		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
+
 	
    			print "Datos de entrada:", self.__in_data
 	

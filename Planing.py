@@ -43,10 +43,11 @@ class Planing(Obj_Head):
 				self.rotacion = self.rotacion - 360
 			if self.rotacion < -180:
 				self.rotacion = self.rotacion + 360
-			datos = ["d"] + [str(self.rotacion)]			
+			datos = [chr(100)] + [chr(9)]			
 			self.send(datos)
 			while not self.__flag:
 				pass
+			print "Adelante 30 cm"
 			self.__flag = 0
 			#print("%s.Rotar %s grados" % (i,rotacion))
 			#print 'Adelante 30 cm'
@@ -57,5 +58,5 @@ class Planing(Obj_Head):
 				self.tita = 0
 			if self.tita < -1:
 				self.tita = 3	
-	def flag(self):
+	def flag(self,datos):
 		self.__flag = 1
