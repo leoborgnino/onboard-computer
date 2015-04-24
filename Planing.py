@@ -3,6 +3,7 @@ from math import *
 import random
 from Obj_Head import Obj_Head
 import plan
+import time
 
 
 class Planing(Obj_Head):
@@ -57,6 +58,7 @@ class Planing(Obj_Head):
 			if self.tita > 4:
 				self.tita = 0
 			if self.tita < -1:
-				self.tita = 3	
+				self.tita = 3
+			time.sleep(1)	
 	def flag(self,datos):
 		self.__flag = 1

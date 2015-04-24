@@ -47,8 +47,8 @@ class UART:
 	
 	
 	def receive(self,method):
-		self.recibido = 0
-		while not self.recibido:
+	#self.recibido = 0
+	#	while not self.recibido:
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
         		### timeout si fue seteado.
         		in_data_0      = self.__ser.read()
@@ -62,11 +62,11 @@ class UART:
         		### Inicio de Trama (MIT).
         		if self.__flag_in_frame==False:
         	    		indx = [i for i,x in enumerate(self.__in_data) if (x&0xE0)==160]
-        	    	if len(indx)>0:
-        	        	self.__in_data       = self.__in_data[indx[0]:len(self.__in_data)]
-        	        	self.__flag_in_frame = True
-        	    	else:
-        	        	self.__in_data       = []
+        	    	        if len(indx)>0:
+        	        	        self.__in_data       = self.__in_data[indx[0]:len(self.__in_data)]
+        	        	        self.__flag_in_frame = True
+        	    	        else:
+        	        	        self.__in_data       = []
 			        ### Si encontramos un MIT y no tenemos la longitud de la trama
 	        	### aguardamos hasta tener al menos  3 octetos para extraer el
 		        ### parametro de longitud.
@@ -88,10 +88,9 @@ class UART:
                             self.uid = self.__in_data[3]
                             self.device = self.__in_data[4]
 		            self.__in_data      = self.__in_data[(self.__flen+6):]
-		            self.__flag_in_fame = False
+		            self.__flag_in_frame = False
 		            self.__flag_flen    = False
 		            self.__flen         = 0
-		            self.recibido 		= 1
 			    print self.datos
                             method(self.uid,self.datos)
                             

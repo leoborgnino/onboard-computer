@@ -4,6 +4,7 @@ import threading
 import Planing
 import ThreadHandler
 import pruebaserver
+import MPU6050
 
 def open_threads():
 	hilo_recepcion.start()
@@ -21,11 +22,13 @@ com = Comunicacion.Comunicacion('/dev/ttyS0',115200)
 hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
 open_threads()
-pl = Planing.Planing(com)
+acelerometro = MPU6050.mpu6050(com)
+acelerometro.obtener_datos()
+#pl = Planing.Planing(com)
 #web = pruebaserver.index(com)
-pl.run()
+#pl.run()
 #com.txfifo("defghijklmn")
-time.sleep(5)	
+#time.sleep(5)
 close_threads()
 
 
