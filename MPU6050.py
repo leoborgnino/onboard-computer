@@ -18,11 +18,14 @@ class mpu6050(Obj_Head):
                 self.__arreglo_datos = []
         
         def save(self,datos):
-                for j in range (6):
-                        cadena = ""
-                        for i in range(4):
-                                cadena = cadena + chr(datos[i + (4*j)])        
-                        self.__arreglo_datos.append(cadena)
+                i = 0
+                while(i < len(datos)):
+                    cadena = ""
+                    while(datos[i]) != 32:         
+                        cadena = cadena + chr(datos[i])
+                        i += 1
+                    self.__arreglo_datos.append(cadena)
+                    i += 1
                 self.__flag_datos = 1                
 
         def print_datos(self):
