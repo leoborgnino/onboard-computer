@@ -47,7 +47,8 @@ class grafico:
         #f = urllib.urlopen(link)
         #myfile = f.read()
         #return myfile.split(" ")
-        return self.acelerometro.inclinacion()
+        self.acelerometro.obtener_datos()
+        return [self.acelerometro.x_rotation, self.acelerometro.y_rotation]
 
     
     def run(self):
