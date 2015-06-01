@@ -42,7 +42,7 @@ class UART:
 			#for i in range(data_len):
 			#	lista.append(data[i])
 			#lista.append(mod_iheader)
-			print lista
+			#print lista
 			self.__ser.write(lista)			
 	
 	
@@ -56,7 +56,7 @@ class UART:
         		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
 
 	
-   			print "Datos de entrada:", self.__in_data
+   			#print "Datos de entrada:", self.__in_data
 	
         		### Si no estamos procesando una trama se busca el Marcador de
         		### Inicio de Trama (MIT).
@@ -91,7 +91,7 @@ class UART:
 		            self.__flag_in_frame = False
 		            self.__flag_flen    = False
 		            self.__flen         = 0
-			    print self.datos
+			    #print self.datos
                             method(self.uid,self.datos)
                             
 

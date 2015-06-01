@@ -12,5 +12,4 @@ class Scheduler:
 		return self.__contador_id
 	
 	def mngr(self,id_obj,datos):
-		print ",,,"
 		self.__obj[id_obj](datos)		

@@ -3,9 +3,9 @@ import time
 import threading
 import Planing
 import ThreadHandler
-import pruebaserver
+#import pruebaserver
 import MPU6050
-import graphic
+#import graphic
 
 def open_threads():
 	hilo_recepcion.start()
@@ -21,18 +21,21 @@ def close_threads():
 
 com = Comunicacion.Comunicacion('/dev/ttyS0',115200)
 acelerometro = MPU6050.mpu6050(com)
-#grafico = graphic.grafico(acelerometro)
 hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
-#hilo_muestra_datos = ThreadHandler.ThreadHandler(grafico.run,"Muestra")
 open_threads()
-acelermetro.calibrar()
+acelerometro.calibrar()
+time.sleep(1)
 acelerometro.obtener_datos()
+acelerometro.print_datos()
 #pl = Planing.Planing(com)
-#web = pruebaserver.index(com)
+#web = pruebaserver.pruebaserver(acelerometro)
 #pl.run()
 #com.txfifo("defghijklmn")
 #time.sleep(5)
+
+
+
 close_threads()
 
 

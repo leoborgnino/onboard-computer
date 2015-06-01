@@ -7,8 +7,8 @@ class mpu6050(Obj_Head):
         def __init__(self,com):
         
                 Obj_Head.__init__(self,com,self.save)
-                self.x_rotation  = 0
-                self.y_rotation  = 0
+                self.x_rotation    = 0
+                self.y_rotation    = 0
                 self.__x_gyro      = 0
                 self.__y_gyro      = 0
                 self.__z_gyro      = 0
@@ -30,16 +30,17 @@ class mpu6050(Obj_Head):
                 self.__flag_datos = 1                
 
         def inclinacion(self):
-                self.x_rotation = math.degrees(math.atan2(self.__y_acel,math.sqrt((self.__x_acel*self.__x_acel) + (self.__z_acel * self.__z_acel))))
-                self.y_rotation = -math.degrees(math.atan2(self.__x_acel,math.sqrt((self.__y_acel*self.__y_acel) + (self.__z_acel * self.__z_acel))))
+                self.x_rotation = math.degrees(math.atan2(float(self.__y_acel),math.sqrt((float(self.__x_acel)*float(self.__x_acel)) + (float(self.__z_acel) * float(self.__z_acel)))))
+                self.y_rotation = -math.degrees(math.atan2(float(self.__x_acel),math.sqrt((float(self.__y_acel)*float(self.__y_acel)) + (float(self.__z_acel) * float(self.__z_acel)))))
   
         def print_datos(self):
-                datos = ["\t\tAcelerómetro:\nEje x:","Eje y:","Eje z:","\t\tGyroscopo:\nEje x:","Eje y:","Eje z:"]
-                for i in range(len(self.__areglo_datos)):
-                        print "%s %lf" % (datos[i],self.__arreglo_datos[i])
-                print "\t\tInclinacion:\nEje x: %lf\nEje y: %lf" % (self.x_rotation, self.y_rotation)
-        
-        def calibrar(self):
+                print "\nAcelerometro: \t\tGiroscopo: \t\tInclinacion:"
+		print "--------------\t\t-----------\t\t------------"
+                print "Eje x: %s \t\tEje x: %s \t\tEje x: %s" % (self.__x_acel,self.__x_gyro,self.x_rotation)  
+		print "Eje y: %s \t\tEje y: %s \t\tEje y: %s" % (self.__y_acel,self.__y_gyro,self.y_rotation) 
+        	print "Eje z: %s \t\tEje z: %s" % (self.__z_acel,self.__z_gyro)
+	def calibrar(self):
+		print "Calibracion [OK]"
                 self.send(chr(104))
 
         def obtener_datos(self):
@@ -54,5 +55,4 @@ class mpu6050(Obj_Head):
                 self.__y_gyro = self.__arreglo_datos[4]
                 self.__z_gyro = self.__arreglo_datos[5]               
                 self.inclinacion()
-                self.print_datos()
                 return self.__arreglo_datos

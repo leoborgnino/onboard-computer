@@ -15,9 +15,9 @@ class grafico:
     SCALAR2 = 0.2
     SCALAR = .5
 
-	def __init__(self,acelerometro):
-		#server = pruebaserver.index()
-                self.acelerometro = acelerometro
+    def __init__(self,acelerometro):
+	#server = pruebaserver.index()
+	self.acelerometro = acelerometro
 
     def resize(self,width, height):
         glViewport(0, 0, width, height)
