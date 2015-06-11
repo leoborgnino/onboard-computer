@@ -44,13 +44,19 @@ class Planing(Obj_Head):
 				self.rotacion = self.rotacion - 360
 			if self.rotacion < -180:
 				self.rotacion = self.rotacion + 360
-			datos = [chr(100)] + [chr(9)]			
+			datos = [chr(100)] + [chr(9)] + [chr(20)]
 			self.send(datos)
+                        self.__flag = 0
 			while not self.__flag:
 				pass
 			print "Adelante 30 cm"
-			self.__flag = 0
-			#print("%s.Rotar %s grados" % (i,rotacion))
+                        datos = [chr(102)] + [chr(abs(self.rotacion))] + [chr((1 if self.rotacion > 0 else 0))]
+                        self.send(datos)
+                        self.__flag = 0
+			while not self.__flag:
+				pass
+			print "Roto %f grados" % (self.rotacion)
+                        #print("%s.Rotar %s grados" % (i,rotacion))
 			#print 'Adelante 30 cm'
 			#print("%s.Enviado: %s" % (i,rotacion) )
 		

@@ -28,12 +28,12 @@ acelerometro.calibrar()
 time.sleep(1)
 acelerometro.obtener_datos()
 acelerometro.print_datos()
-#pl = Planing.Planing(com)
+pl = Planing.Planing(com)
 #web = pruebaserver.pruebaserver(acelerometro)
-#pl.run()
+pl.run()
 #com.txfifo("defghijklmn")
 #time.sleep(5)
-
+print "Run OP"
 
 
 close_threads()
