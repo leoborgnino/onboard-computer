@@ -33,6 +33,7 @@ class UART:
 				lista = [mod_header,size_h,size_l,device,uid]+data+[mod_iheader]
 			else:
 				lista = [mod_header,size_h,size_l,device,uid]+[data]+[mod_iheader]
+		
 			#lista = []
 			#lista.append(mod_header)
 			#lista.append(size_h)
@@ -42,9 +43,13 @@ class UART:
 			#for i in range(data_len):
 			#	lista.append(data[i])
 			#lista.append(mod_iheader)
-			#print lista
-			self.__ser.write(lista)			
-	
+			for i in range(len(lista)):
+				if type(lista[i]) == int:
+					self.__ser.write(str(chr(lista[i])))
+				else:
+					self.__ser.write(str(lista[i]))			
+		 	print str(lista)
+			#self.__ser.write(str(lista))
 	
 	def receive(self,method):
 	#self.recibido = 0
@@ -56,7 +61,7 @@ class UART:
         		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
 
 	
-   			#print "Datos de entrada:", self.__in_data
+   			print "Datos de entrada:", self.__in_data
 	
         		### Si no estamos procesando una trama se busca el Marcador de
         		### Inicio de Trama (MIT).

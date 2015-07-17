@@ -29,6 +29,10 @@ class Comunicacion():
 	
 	def txfifo(self,dato,uid):
 		lista = []
+	#	if type(dato) == int:
+	#		lista.append(dato)
+	#		lista.append(uid)
+	#	else:
 		for i in range(len(dato)):
 			for j in range(len(dato[i])):
 				lista.append(dato[i][j])
