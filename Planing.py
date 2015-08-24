@@ -4,31 +4,48 @@ import random
 from Obj_Head import Obj_Head
 import plan
 import time
-
+import numpy as np
 
 class Planing(Obj_Head):
 
 	def __init__(self,com,imagen):
-		self.grid		=    	    [[0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
-		   	  	                     [0, 1, 1, 1, 0, 1, 1, 1, 1, 1],
-		     	              	     [0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
-			                         [0, 1, 0, 1, 0, 0, 0, 0, 0, 1],
-			                         [0, 1, 0, 1, 0, 1, 1, 0, 0, 1],
-			 	                     [0, 1, 0, 1, 0, 1, 1, 0, 0, 1],
-				                     [0, 1, 0, 1, 0, 1, 1, 0, 0, 1],
-	                     	         [0, 0, 0, 1, 0, 1, 1, 0, 0, 1],
-			                         [0, 1, 1, 1, 0, 1, 1, 0, 0, 1],
-			                         [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-			                         [0, 1, 1, 1, 0, 1, 1, 0, 0, 1],
-			                         [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-	                     	         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+		
+		''''self.grid		=    	    [[0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+		   	  	                     [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
+			     	              	     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+				                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+			        	             [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+			 	                     [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+				                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	                     	        	     [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+			                             [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+			                             [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+			                             [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+	                     	         	     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
-		self.goal = [0, 0]
-		self.init = [len(self.grid)-1, len(self.grid[0])-1]
+		
+		'''
+		self.m_imagen = misc.imread(imagen)
+		self.m_plan = np.zeros((len(self.m_imagen),len(self.m_imagen[0])))
+		for i in range(len(self.m_imagen)):
+			for j in range(len(self.m_imagen[0])):
+				if (self.m_imagen[i][j][0] > 200) and (self.m_imagen[i][j][1] > 200) and (self.m_imagen[i][j][2] > 200):
+					self.m_plan[i][j] = 0
+				elif (self.m_imagen[i][j][0] < 200) and (self.m_imagen[i][j][1] < 200) and (self.m_imagen[i][j][2] < 200):
+					self.m_plan[i][j] = 1
+				elif (self.m_imagen[i][j][0] > 200) and (self.m_imagen[i][j][1] < 100) and (self.m_imagen[i][j][2] < 100):
+					self.goal = [i,j]
+				elif (self.m_imagen[i][j][0] < 100) and (self.m_imagen[i][j][1] > 200) and (self.m_imagen[i][j][2] < 100):
+					self.init = [i,j]
+		for i in range(len(self.m_plan)):
+			print self.m_plan[i]
+		print "Inicio: %d %d" % (self.init[0],self.init[1])
+		print "Final:  %d %d" % (self.goal[0],self.goal[1])
 		self.tita = 0
 		self.contador = 0	
 		Obj_Head.__init__(self,com,self.flag)
-		self.path = plan.plan(self.grid,self.init,self.goal)		
+		self.path = plan.plan(self.m_plan,self.init,self.goal)		
 		self.__flag = 0
 	
 	def run(self):
