@@ -25,8 +25,10 @@ class mpu6050(Obj_Head):
                     while(datos[i]) != 32:         
                         cadena = cadena + chr(datos[i])
                         i += 1
-                    self.__arreglo_datos.append(cadena)
+                    if cadena != "":
+		    	self.__arreglo_datos.append(cadena)
                     i += 1
+		print self.__arreglo_datos
                 self.__flag_datos = 1                
 
         def inclinacion(self):
