@@ -1,3 +1,5 @@
+# Head of all the objects of the software.
+
 class Obj_Head(object):
 
 	def __init__(self,com,method):

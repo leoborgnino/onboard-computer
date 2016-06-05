@@ -60,15 +60,6 @@ class Planing(Obj_Head):
 				self.rotacion = self.rotacion + 360
 
 			if self.rotacion != 0:				
-				#if (contador * 30) > 240:
-				#	while (contador*30) > 90:
-				#		datos = [chr(100)] + [chr(90)] + [chr(70)] + [chr(0)]
-				#		self.send(datos)
-				#		self.__flag = 0
-				#		while not self.__flag:
-				#			pass
-				#		self.__flag = 0	
-				#		contador = contador - 3
 				
 				datos = [chr(102)] + [chr(abs(self.rotacion))] + [chr(1) if self.rotacion > 0 else chr(0)] 
 				self.send(datos)

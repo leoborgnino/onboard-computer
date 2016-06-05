@@ -7,6 +7,7 @@ from OpenGL.GLU import *
 from math import radians
 from pygame.locals import *
 import pruebaserver
+import time
 
 
 class grafico:
@@ -29,7 +30,7 @@ class grafico:
         gluLookAt(0.0, 1.0, -5.0,
                   0.0, 0.0, 0.0,
                   0.0, 1.0, 0.0)
-        
+
     def init(self):
         glEnable(GL_DEPTH_TEST)
         glClearColor(0.0, 0.0, 0.0, 0.0)
@@ -41,7 +42,7 @@ class grafico:
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
         glLightfv(GL_LIGHT0, GL_AMBIENT, (0.3, 0.3, 0.3, 1.0));
-    
+
     def read_values(self):
         #link = "http://192.168.0.31:8080" # Change this address to your settings
         #f = urllib.urlopen(link)
@@ -50,7 +51,7 @@ class grafico:
         self.acelerometro.obtener_datos()
         return [self.acelerometro.x_rotation, self.acelerometro.y_rotation]
 
-    
+
     def run(self):
         pygame.init()
         screen = pygame.display.set_mode(self.SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
@@ -59,58 +60,59 @@ class grafico:
         clock = pygame.time.Clock()
         cube = Cube((0.0, 0.0, 0.0), (.5, .5, .7))
         angle = 0
-        
+
         while True:
             then = pygame.time.get_ticks()
+            time.sleep(0.1)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     return
                 if event.type == KEYUP and event.key == K_ESCAPE:
                     return
-    
+
             values = self.read_values()
             #print values
             x_angle = values[0]
             y_angle = values[1]
-    
+
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    
+
             glColor((1.,1.,1.))
             glLineWidth(1)
             glBegin(GL_LINES)
-    
+
             for x in range(-20, 22, 2):
                 glVertex3f(x/10.,-1,-1)
                 glVertex3f(x/10.,-1,1)
-            
+
             for x in range(-20, 22, 2):
                 glVertex3f(x/10.,-1, 1)
                 glVertex3f(x/10., 1, 1)
-            
+
             for z in range(-10, 12, 2):
                 glVertex3f(-2, -1, z/10.)
                 glVertex3f( 2, -1, z/10.)
-    
+
             for z in range(-10, 12, 2):
                 glVertex3f(-2, -1, z/10.)
                 glVertex3f(-2,  1, z/10.)
-    
+
             for z in range(-10, 12, 2):
                 glVertex3f( 2, -1, z/10.)
                 glVertex3f( 2,  1, z/10.)
-    
+
             for y in range(-10, 12, 2):
                 glVertex3f(-2, y/10., 1)
                 glVertex3f( 2, y/10., 1)
-            
+
             for y in range(-10, 12, 2):
                 glVertex3f(-2, y/10., 1)
                 glVertex3f(-2, y/10., -1)
-            
+
             for y in range(-10, 12, 2):
                 glVertex3f(2, y/10., 1)
                 glVertex3f(2, y/10., -1)
-            
+
             glEnd()
             glPushMatrix()
             glRotate(float(x_angle), 1, 0, 0)
@@ -118,7 +120,7 @@ class grafico:
             cube.render()
             glPopMatrix()
             pygame.display.flip()
-    
+
 class Cube(object):
 
     def __init__(self, position, color):
@@ -168,4 +170,3 @@ class Cube(object):
             glVertex(vertices[v3])
             glVertex(vertices[v4])
         glEnd()
-
