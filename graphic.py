@@ -6,19 +6,28 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from math import radians
 from pygame.locals import *
-import pruebaserver
+#import pruebaserver
 import time
+import math
+
 
 
 class grafico:
 
-    SCREEN_SIZE = (800, 600)
+    SCREEN_SIZE = (450, 450)
     SCALAR2 = 0.2
     SCALAR = .5
+    BLACK = (0, 0, 0)
+    GREEN_BACK = (0,20,0)
+    WHITE = (255, 255, 255)
+    GREEN = (0, 255, 0)
+    RED = (255, 0, 0)
+    BLUE = (0, 0, 255)
+    PI = 3.141592653
 
     def __init__(self,acelerometro):
 	#server = pruebaserver.index()
-	self.acelerometro = acelerometro
+		self.acelerometro = acelerometro
 
     def resize(self,width, height):
         glViewport(0, 0, width, height)
@@ -54,71 +63,118 @@ class grafico:
 
     def run(self):
         pygame.init()
-        screen = pygame.display.set_mode(self.SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
-        self.resize(*self.SCREEN_SIZE)
-        self.init()
-        clock = pygame.time.Clock()
-        cube = Cube((0.0, 0.0, 0.0), (.5, .5, .7))
-        angle = 0
-
+        angle = self.PI/2
+        decrement = 0
+        switch_screen = 0
         while True:
             then = pygame.time.get_ticks()
-            time.sleep(0.1)
+            time.sleep(.1)
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    return
+                    pygame.quit()
+                    quit()
                 if event.type == KEYUP and event.key == K_ESCAPE:
-                    return
+                    pygame.quit()
+                    quit()
+                if event.type == KEYUP and event.key == K_SPACE:
+                    print switch_screen
+                    if (switch_screen):
+                        switch_screen = 0
+                    else:
+                        switch_screen = 1
 
-            values = self.read_values()
-            #print values
-            x_angle = values[0]
-            y_angle = values[1]
+            if (switch_screen == 1):
+                screen = pygame.display.set_mode(self.SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
+                self.resize(*self.SCREEN_SIZE)
+                self.init()
+                clock = pygame.time.Clock()
+                cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
+                values = self.read_values()
+                #print values
+                x_angle = values[0]
+                y_angle = values[1]
 
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+                glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-            glColor((1.,1.,1.))
-            glLineWidth(1)
-            glBegin(GL_LINES)
+                glColor((1.,1.,1.))
+                glLineWidth(1)
+                glBegin(GL_LINES)
 
-            for x in range(-20, 22, 2):
-                glVertex3f(x/10.,-1,-1)
-                glVertex3f(x/10.,-1,1)
+                for x in range(-20, 22, 2):
+                    glVertex3f(x/10.,-1,-1)
+                    glVertex3f(x/10.,-1,1)
 
-            for x in range(-20, 22, 2):
-                glVertex3f(x/10.,-1, 1)
-                glVertex3f(x/10., 1, 1)
+                for x in range(-20, 22, 2):
+                    glVertex3f(x/10.,-1, 1)
+                    glVertex3f(x/10., 1, 1)
 
-            for z in range(-10, 12, 2):
-                glVertex3f(-2, -1, z/10.)
-                glVertex3f( 2, -1, z/10.)
+                for z in range(-10, 12, 2):
+                    glVertex3f(-2, -1, z/10.)
+                    glVertex3f( 2, -1, z/10.)
 
-            for z in range(-10, 12, 2):
-                glVertex3f(-2, -1, z/10.)
-                glVertex3f(-2,  1, z/10.)
+                for z in range(-10, 12, 2):
+                    glVertex3f(-2, -1, z/10.)
+                    glVertex3f(-2,  1, z/10.)
 
-            for z in range(-10, 12, 2):
-                glVertex3f( 2, -1, z/10.)
-                glVertex3f( 2,  1, z/10.)
+                for z in range(-10, 12, 2):
+                    glVertex3f( 2, -1, z/10.)
+                    glVertex3f( 2,  1, z/10.)
 
-            for y in range(-10, 12, 2):
-                glVertex3f(-2, y/10., 1)
-                glVertex3f( 2, y/10., 1)
+                for y in range(-10, 12, 2):
+                    glVertex3f(-2, y/10., 1)
+                    glVertex3f( 2, y/10., 1)
 
-            for y in range(-10, 12, 2):
-                glVertex3f(-2, y/10., 1)
-                glVertex3f(-2, y/10., -1)
+                for y in range(-10, 12, 2):
+                    glVertex3f(-2, y/10., 1)
+                    glVertex3f(-2, y/10., -1)
 
-            for y in range(-10, 12, 2):
-                glVertex3f(2, y/10., 1)
-                glVertex3f(2, y/10., -1)
+                for y in range(-10, 12, 2):
+                    glVertex3f(2, y/10., 1)
+                    glVertex3f(2, y/10., -1)
 
-            glEnd()
-            glPushMatrix()
-            glRotate(float(x_angle), 1, 0, 0)
-            glRotate(-float(y_angle), 0, 0, 1)
-            cube.render()
-            glPopMatrix()
+                glEnd()
+                glPushMatrix()
+                glRotate(float(x_angle), 1, 0, 0)
+                glRotate(-float(y_angle), 0, 0, 1)
+                cube.render()
+                glPopMatrix()
+            else:
+                screen = pygame.display.set_mode(self.SCREEN_SIZE)
+                # Set the screen background
+                screen.fill(self.GREEN_BACK)
+                # Dimensions of radar sweep
+                # Start with the top left at 20,20
+                # Width/height of 250
+                box_dimensions = [0, 0, 450, 450]
+                box_dimensions_over_two = [75, 75, 300, 300]
+                box_dimensions_over_three = [150, 150, 150, 150]
+
+                # Draw the outline of a circle to 'sweep' the line around
+                pygame.draw.ellipse(screen, self.GREEN, box_dimensions, 1)
+                pygame.draw.ellipse(screen, self.GREEN, box_dimensions_over_two, 1)
+                pygame.draw.ellipse(screen, self.GREEN, box_dimensions_over_three, 1)
+
+                # Draw a black box around the circle
+                # pygame.draw.rect(screen, BLACK, box_dimensions, 2)
+                pygame.draw.line(screen, self.GREEN, [225, 0], [225, 450], 1)
+                pygame.draw.line(screen, self.GREEN, [0, 225], [450, 225], 1)
+
+                # Calculate the x,y for the end point of our 'sweep' based on
+                # the current angle
+                x = 225 * math.sin(angle) + 225
+                y = 225 * math.cos(angle) + 225
+
+                # Draw the line from the center at 145, 145 to the calculated
+                # end spot
+                pygame.draw.line(screen, self.RED, [225, 225], [x, y], 2)
+
+                # Increase the angle by 0.03 radians
+                if angle > 3*self.PI/2:
+                    decrement = 1
+                elif angle < self.PI/2:
+                    decrement = 0
+                angle = angle + ((-1) ** decrement) * .03
+
             pygame.display.flip()
 
 class Cube(object):
