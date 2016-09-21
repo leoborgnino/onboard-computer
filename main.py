@@ -14,8 +14,11 @@ import threading
 import Planing
 import ThreadHandler
 import MPU6050
+import Ultrasonic_Sensor
 import graphic
 import sys
+
+BAUD_RATE = 9600
 
 def open_threads():
     hilo_recepcion.start()
@@ -33,17 +36,18 @@ def close_threads():
     hilo_grafico.stop_thread()
     time.sleep(0.05)
 
-com = Comunicacion.Comunicacion(sys.argv[1],115200)
-#acelerometro = MPU6050.mpu6050(com)
-grafico = graphic.grafico(acelerometro)
+com = Comunicacion.Comunicacion(sys.argv[1],BAUD_RATE)
+acelerometro = MPU6050.mpu6050(com)
+ultrasonido = Ultrasonic_Sensor.Ultrasonic_Sensor(com)
+grafico = graphic.grafico(acelerometro,ultrasonido)
 hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
 hilo_grafico = ThreadHandler.ThreadHandler(grafico.run, "Hilo Grafico")
 open_threads()
-#acelerometro.obtener_datos()
-#acelerometro.calibrar()
-#acelerometro.print_datos()
+acelerometro.obtener_datos()
+acelerometro.calibrar()
+acelerometro.print_datos()
 pl = Planing.Planing(com,sys.argv[2])
 pl.run()
-time.sleep(5)
+time.sleep(50)
 close_threads()

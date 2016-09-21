@@ -39,7 +39,7 @@ class UART:
 					self.__ser.write(str(chr(lista[i])))
 				else:
 					self.__ser.write(str(lista[i]))
-		 	#print str(lista)
+		 	print str(lista)
 
 	def receive(self,method):
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
