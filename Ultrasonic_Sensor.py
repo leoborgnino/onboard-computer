@@ -4,7 +4,7 @@ import math
 
 class Ultrasonic_Sensor(Obj_Head):
 
-        N_STEPS = 120
+        N_STEPS = 8
 
         def __init__(self,com):
                 Obj_Head.__init__(self,com,self.save)
@@ -27,17 +27,11 @@ class Ultrasonic_Sensor(Obj_Head):
                 self.__flag_datos = 1
 
         def obtener_datos(self):
-            for i in range(self.N_STEPS/6):
-                datos = [chr(105)] + [chr(i)]
-                self.send(datos)
-                while not self.__flag_datos:
-                    pass
-                self.__flag_datos = 0
-                self.__ultrasonic_distance[i*6  ] = float(self.__arreglo_datos[0])/100
-                self.__ultrasonic_distance[i*6+1] = float(self.__arreglo_datos[1])/100
-                self.__ultrasonic_distance[i*6+2] = float(self.__arreglo_datos[2])/100
-                self.__ultrasonic_distance[i*6+3] = float(self.__arreglo_datos[3])/100
-                self.__ultrasonic_distance[i*6+4] = float(self.__arreglo_datos[4])/100
-                self.__ultrasonic_distance[i*6+5] = float(self.__arreglo_datos[5])/100
-           #print self.__arreglo_datos
+            datos = [chr(105)]
+            self.send(datos)
+            while not self.__flag_datos:
+                pass
+            self.__flag_datos = 0
+            for i in range(self.N_STEPS):
+                self.__ultrasonic_distance[i] = float(self.__arreglo_datos[i])/100
             return self.__ultrasonic_distance

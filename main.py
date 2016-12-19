@@ -5,7 +5,7 @@
 ##                                                                                      #
 ##  sys.argv[1] = name of the serial port to use. Example: /dev/ttyUSB0                 #
 ##  sys.argv[2] = name of the image to import and use in the planing                    #
-##                                                                                      #
+##                                                                                     #
 #########################################################################################
 
 import Comunicacion
@@ -40,12 +40,13 @@ com = Comunicacion.Comunicacion(sys.argv[1],BAUD_RATE)
 acelerometro = MPU6050.mpu6050(com)
 ultrasonido = Ultrasonic_Sensor.Ultrasonic_Sensor(com)
 grafico = graphic.grafico(acelerometro,ultrasonido)
+#grafico = graphic.grafico(acelerometro)
 hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
 hilo_grafico = ThreadHandler.ThreadHandler(grafico.run, "Hilo Grafico")
 open_threads()
-acelerometro.obtener_datos()
 acelerometro.calibrar()
+acelerometro.obtener_datos()
 acelerometro.print_datos()
 pl = Planing.Planing(com,sys.argv[2])
 pl.run()

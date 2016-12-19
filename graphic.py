@@ -25,9 +25,9 @@ class grafico:
     RED = (255, 0, 0)
     BLUE = (0, 0, 255)
     PI = 3.141592653
-    N_ULTRASONIC_STEPS = 120
+    N_ULTRASONIC_STEPS =  8
 
-    def __init__(self,acelerometro,ultrasonido):
+    def __init__(self,acelerometro,ultrasonido=False):
         self.acelerometro = acelerometro
         self.ultrasonido = ultrasonido
 
@@ -80,7 +80,7 @@ class grafico:
             clock = pygame.time.Clock()
             cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
             values = self.read_values()
-            #print values
+            print values
             x_angle = values[0]
             y_angle = values[1]
 
@@ -130,12 +130,10 @@ class grafico:
             glPopMatrix()
 
             plt.clf()
-            #plt.plot(self.ultrasonido.obtener_datos())
-            prueba = [(random.random()+0.3)*2 for i in range(self.N_ULTRASONIC_STEPS)]
-            theta = np.arange((2*np.pi/360)*((180-self.N_ULTRASONIC_STEPS)/2.),(2*np.pi/360)*(180-(180-self.N_ULTRASONIC_STEPS)/2.-0.5),2*np.pi/360)
+            theta = np.arange((2*np.pi/360)*((180-120)/2.),(2*np.pi/360)*(180-(180-120)/2.+0.5),2*np.pi/360*(120/(self.N_ULTRASONIC_STEPS-1)))
+            print np.shape(theta)
             ax = plt.subplot(111, projection='polar')
-            #ax.plot(theta, self.ultrasonido.obtener_datos(), 'b.')
-            ax.plot(theta, prueba, 'b.')
+            ax.plot(theta, self.ultrasonido.obtener_datos(), 'r.')
             ax.set_rmax(2.5)
             ax.grid(True)
             ax.set_title("Radar", va='bottom')
