@@ -25,6 +25,9 @@ class plan:
 			for j in range(len(self.grid[0])):
 				self.heuristic[i][j] = abs(i - self.goal[0]) +abs(j - self.goal[1]) 
 
+        def grid_change(self,value,i,j):
+                self.grid[i][j] = value;
+
     # ------------------------------------------------
     # 
     # A* para buscar el camino al objetivo
