@@ -36,7 +36,8 @@ def close_threads():
 
 com = Comunicacion.Comunicacion(sys.argv[1],115200)
 acelerometro = MPU6050.mpu6050(com)
-grafico = graphic.grafico(acelerometro)
+ultrasonido = Ultrasonic_Sensor.Ultrasonic_Sensor(com)
+grafico = graphic.grafico(acelerometro,ultrasonido)
 hilo_recepcion = ThreadHandler.ThreadHandler(com.receive, "Hilo de recepcion")
 hilo_envio = ThreadHandler.ThreadHandler(com.send, "Hilo de envio")
 hilo_grafico = ThreadHandler.ThreadHandler(grafico.run, "Hilo Grafico")
