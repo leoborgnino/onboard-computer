@@ -6,19 +6,30 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from math import radians
 from pygame.locals import *
-import pruebaserver
 import time
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+import random
 
 
 class grafico:
 
-    SCREEN_SIZE = (800, 600)
+    SCREEN_SIZE = (450, 450)
     SCALAR2 = 0.2
     SCALAR = .5
+    BLACK = (0, 0, 0)
+    GREEN_BACK = (0,20,0)
+    WHITE = (255, 255, 255)
+    GREEN = (0, 255, 0)
+    RED = (255, 0, 0)
+    BLUE = (0, 0, 255)
+    PI = 3.141592653
+    N_ULTRASONIC_STEPS =  8
 
-    def __init__(self,acelerometro):
-	#server = pruebaserver.index()
-	self.acelerometro = acelerometro
+    def __init__(self,acelerometro,ultrasonido=False):
+        self.acelerometro = acelerometro
+        self.ultrasonido = ultrasonido
 
     def resize(self,width, height):
         glViewport(0, 0, width, height)
@@ -44,34 +55,32 @@ class grafico:
         glLightfv(GL_LIGHT0, GL_AMBIENT, (0.3, 0.3, 0.3, 1.0));
 
     def read_values(self):
-        #link = "http://192.168.0.31:8080" # Change this address to your settings
-        #f = urllib.urlopen(link)
-        #myfile = f.read()
-        #return myfile.split(" ")
         self.acelerometro.obtener_datos()
         return [self.acelerometro.x_rotation, self.acelerometro.y_rotation]
 
 
     def run(self):
         pygame.init()
-        screen = pygame.display.set_mode(self.SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
-        self.resize(*self.SCREEN_SIZE)
-        self.init()
-        clock = pygame.time.Clock()
-        cube = Cube((0.0, 0.0, 0.0), (.5, .5, .7))
-        angle = 0
-
+        angle = self.PI/2
+        decrement = 0
         while True:
             then = pygame.time.get_ticks()
-            time.sleep(0.1)
+            time.sleep(.2)
             for event in pygame.event.get():
                 if event.type == QUIT:
-                    return
+                    pygame.quit()
+                    quit()
                 if event.type == KEYUP and event.key == K_ESCAPE:
-                    return
+                    pygame.quit()
+                    quit()
 
+            screen = pygame.display.set_mode(self.SCREEN_SIZE, HWSURFACE | OPENGL | DOUBLEBUF)
+            self.resize(*self.SCREEN_SIZE)
+            self.init()
+            clock = pygame.time.Clock()
+            cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
             values = self.read_values()
-            #print values
+            print values
             x_angle = values[0]
             y_angle = values[1]
 
@@ -119,6 +128,17 @@ class grafico:
             glRotate(-float(y_angle), 0, 0, 1)
             cube.render()
             glPopMatrix()
+
+            plt.clf()
+            theta = np.arange((2*np.pi/360)*((180-120)/2.),(2*np.pi/360)*(180-(180-120)/2.+0.5),2*np.pi/360*(120/(self.N_ULTRASONIC_STEPS-1)))
+            print np.shape(theta)
+            ax = plt.subplot(111, projection='polar')
+            ax.plot(theta, self.ultrasonido.obtener_datos(), 'r.')
+            ax.set_rmax(2.5)
+            ax.grid(True)
+            ax.set_title("Radar", va='bottom')
+            plt.draw()
+            plt.show(block=False)
             pygame.display.flip()
 
 class Cube(object):

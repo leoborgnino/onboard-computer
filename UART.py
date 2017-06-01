@@ -39,7 +39,7 @@ class UART:
 					self.__ser.write(str(chr(lista[i])))
 				else:
 					self.__ser.write(str(lista[i]))
-		 	#print str(lista)
+		 	print str(lista)
 
 	def receive(self,method):
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
@@ -49,7 +49,7 @@ class UART:
         		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
 
 
-   			#print "Datos de entrada:", self.__in_data
+   			print "Datos de entrada:", self.__in_data
 
         		### Si no estamos procesando una trama se busca el Marcador de
         		### Inicio de Trama (MIT).
