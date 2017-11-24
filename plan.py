@@ -20,6 +20,30 @@ class plan:
             for j in range(len(self.grid[0])):
                 self.heuristic[i][j] = abs(i - self.goal[0]) +abs(j - self.goal[1])
 
+    # ----------------------------------------
+    # Smooth Path
+    # ----------------------------------------
+
+    def smooth(self, path, weight_data = 0.5, weight_smooth = 0.25, tolerance = 0.000001):
+
+        # Copia de path
+        newpath = [[0 for row in range(len(path[0]))] for col in range(len(path))]
+        for i in range(len(path)):
+            for j in range(len(path[0])):
+                newpath[i][j] = path[i][j]
+        # Minimizar (xi-yi)^2 (yi yi+1)^2
+        # Condicion de corte = tolerance
+        change = tolerance        
+        while change >= tolerance:
+            change = 0.0
+            for i in range(1,len(path)-1): # Primer y ultimo punto impolutos
+                for j in range(len(path[0])):
+                    aux = newpath[i][j]
+                    newpath[i][j] += weight_data * (path[i][j] - newpath[i][j])
+                    newpath[i][j] += weight_smooth * ( newpath[i-1][j] \
+                                                       + newpath[i+1][j] - (2.0 * newpath[i][j]))
+                    change += abs(aux - newpath[i][j])
+        return newpath
     # -------------------------------------
     # A* para buscar el camino al objetivo
     # -------------------------------------
@@ -41,7 +65,8 @@ class plan:
                       for col in range(len(self.grid))]
             self.action = [[0 for row in range(len(self.grid[0]))]
                       for col in range(len(self.grid))]
-
+            print (len(closed))
+            print (len(closed[0]))
             closed[self.init[0]][self.init[1]] = 1
 
 
