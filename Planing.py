@@ -13,16 +13,16 @@ class Planing(Obj_Head):
         ''''self.grid       =           [[0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
                                          [0, 0, 0, 0, 0, 0, 1, 1, 1, 1],
                                          [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                                     [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-                                     [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
-                                     [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                                             [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+                                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                                         [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+                                         [1, 1, 1, 1, 1, 1, 1, 0, 0, 1],
+                                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                                         [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
                                          [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
                                          [0, 1, 1, 1, 1, 1, 1, 0, 0, 1],
                                          [0, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                                          [0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                                             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+                                         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
 
         
         '''
@@ -47,14 +47,15 @@ class Planing(Obj_Head):
         Obj_Head.__init__(self,com,self.flag)
         self.path = plan.plan(self.m_plan,self.init,self.goal)
         self.__flag = 0
-                self.flag_alarm = False;
+        self.flag_alarm = False;
     
     def run(self):
-                error_path = [0,0]
-                new_init   = [0,0]
+        error_path = [0,0]
+        new_init   = [0,0]
         contador = 1
         self.path.astar()
-        for i  in range(len(self.path.path) - 1):
+        self.path.smooth()
+        for i  in range(len(self.path.spath) - 1):
             self.paso = self.path.action[self.path.path[i+1][0]][self.path.path[i+1][1]]
             self.rotacion = (self.paso - self.tita) * 90
             if self.rotacion > 180:
