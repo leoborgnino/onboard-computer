@@ -49,7 +49,7 @@ class UART:
         		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
 
 
-   			print "Datos de entrada:", self.__in_data
+   			#print "Datos de entrada:", self.__in_data
 
         		### Si no estamos procesando una trama se busca el Marcador de
         		### Inicio de Trama (MIT).

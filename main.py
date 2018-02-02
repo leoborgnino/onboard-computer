@@ -13,10 +13,12 @@ import time
 import threading
 import Planing
 import ThreadHandler
-#import pruebaserver
+import Ultrasonic_Sensor
 import MPU6050
 import graphic
 import sys
+
+BAUD_RATE = 9600
 
 def open_threads():
     hilo_recepcion.start()
@@ -34,7 +36,7 @@ def close_threads():
     hilo_grafico.stop_thread()
     time.sleep(0.05)
 
-com = Comunicacion.Comunicacion(sys.argv[1],115200)
+com = Comunicacion.Comunicacion(sys.argv[1],BAUD_RATE)
 acelerometro = MPU6050.mpu6050(com)
 ultrasonido = Ultrasonic_Sensor.Ultrasonic_Sensor(com)
 grafico = graphic.grafico(acelerometro,ultrasonido)
@@ -46,7 +48,6 @@ acelerometro.obtener_datos()
 acelerometro.calibrar()
 acelerometro.print_datos()
 pl = Planing.Planing(com,sys.argv[2])
-#web = pruebaserver.pruebaserver(acelerometro)
 pl.run()
 time.sleep(5)
 close_threads()

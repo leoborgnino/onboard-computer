@@ -74,6 +74,7 @@ x_soft = np.array(path_soft)[:,0]
 y_soft = np.array(path_soft)[:,1]
 
 plt.plot(x_hard,y_hard,'bo')
-plt.plot(x_soft,y_soft,'rx')
+plt.plot(x_soft,y_soft,'r')
+plt.grid(True)
 
 plt.show()
