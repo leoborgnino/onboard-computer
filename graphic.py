@@ -80,7 +80,7 @@ class grafico:
             clock = pygame.time.Clock()
             cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
             values = self.read_values()
-            print values
+            #print values
             x_angle = values[0]
             y_angle = values[1]
 

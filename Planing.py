@@ -8,7 +8,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-SCALE_FACTOR = 30 # Tile step
+SCALE_FACTOR = 28 # Tile step
 RAD_TO_DEG   = 180.0/math.pi
 
 class Planing(Obj_Head):
@@ -42,7 +42,7 @@ class Planing(Obj_Head):
         new_init   = [0,0]
         contador = 1
         self.path.astar()
-        self.path.smooth(0.5,0.25)
+        self.path.smooth(0.5,0.35)
         path_hard = self.path.path
         path_soft = self.path.spath
         vector_phase = 0.
@@ -51,14 +51,16 @@ class Planing(Obj_Head):
             vector = np.array( [path_soft[i+1][0] - path_soft[i][0],path_soft[i+1][1] - path_soft[i][1] ] )
             #print " Old : %f New: %f Result: %f " % (vector_phase,np.arctan(vector[1]/vector[0]),np.arctan(vector[1]/vector[0]) - vector_phase)
             vector_module = np.sqrt(np.dot(vector, vector))
-            vector_phase  =  np.arctan(vector[1]/vector[0]) - vector_phase_old
+            vector_phase  =  np.arctan(vector[1]/vector[0]) #- vector_phase_old
             vector_phase_old = np.arctan(vector[1]/vector[0])
-            datos = [chr(107)] + [chr(int(vector_module*SCALE_FACTOR))] + [chr(40)] + [chr(1)] + [chr(int(vector_phase*RAD_TO_DEG))] + [chr(1) if vector_phase*RAD_TO_DEG >= 0 else chr(0)]
+            datos = [chr(107)] + [chr(int(vector_module*SCALE_FACTOR))] + [chr(40)] + [chr(1)] + [chr(abs(int(vector_phase*RAD_TO_DEG)))] + [chr(0) if vector_phase*RAD_TO_DEG >= 0 else chr(1)]
             print "Avanzar %f centimetros a %f grados" % (vector_module*SCALE_FACTOR,vector_phase*RAD_TO_DEG)      
             self.send(datos)
             while not self.__flag:
                 pass
             self.__flag = 0
+            #time.sleep(2)
+            #raw_input()
 
         x_hard = np.array(path_hard)[:,0]
         y_hard = np.array(path_hard)[:,1]

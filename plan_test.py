@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 #init = [len(m_plan)-1,len(m_plan[0])-1]
 #goal = [0,0]
 
-imagen = "Images/imagenrgb1.jpg"
+imagen = "Images/imagenrgb0_p.png"
 m_imagen = misc.imread(imagen)
 m_plan = np.zeros((len(m_imagen),len(m_imagen[0])))
 for i in range(len(m_imagen)):
@@ -42,7 +42,7 @@ print "Inicio: %d %d" % (init[0],init[1])
 print "Final:  %d %d" % (goal[0],goal[1])
 path = plan.plan(m_plan,init,goal)
 path.astar()
-path.smooth(0.5,0.25)
+path.smooth(0.5,0.35)
 path_hard = path.path
 path_soft = path.spath
 
@@ -60,7 +60,7 @@ for i in range(len(path_soft)-1):
     vector = np.array( [path_soft[i+1][0] - path_soft[i][0],path_soft[i+1][1] - path_soft[i][1] ] )
     #print " Old : %f New: %f Result: %f " % (vector_phase,np.arctan(vector[1]/vector[0]),np.arctan(vector[1]/vector[0]) - vector_phase)
     vector_module = np.sqrt(np.dot(vector, vector))
-    vector_phase  =  np.arctan(vector[1]/vector[0]) - vector_phase_old
+    vector_phase  =  np.arctan(vector[1]/vector[0]) #- vector_phase_old
     vector_phase_old = np.arctan(vector[1]/vector[0])
     
     print "Avanzar %f centimetros a %f grados" % (vector_module*SCALE_FACTOR,vector_phase*RAD_TO_DEG)
