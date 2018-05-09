@@ -18,7 +18,7 @@ import MPU6050
 import graphic
 import sys
 
-BAUD_RATE = 9600
+BAUD_RATE = 115200
 
 def open_threads():
     hilo_recepcion.start()

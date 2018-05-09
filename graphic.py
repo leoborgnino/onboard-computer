@@ -28,6 +28,8 @@ class grafico:
     N_ULTRASONIC_STEPS =  8
 
     def __init__(self,acelerometro,ultrasonido=False):
+        self.velocidad_file = open('velocidad.log','w')
+        self.orientacion_file = open('orientacion.log','w')
         self.acelerometro = acelerometro
         self.ultrasonido = ultrasonido
 
@@ -55,7 +57,7 @@ class grafico:
         glLightfv(GL_LIGHT0, GL_AMBIENT, (0.3, 0.3, 0.3, 1.0));
 
     def read_values(self):
-        self.acelerometro.obtener_datos()
+        #self.acelerometro.obtener_datos()
         return [self.acelerometro.x_rotation, self.acelerometro.y_rotation]
 
 
@@ -65,7 +67,7 @@ class grafico:
         decrement = 0
         while True:
             then = pygame.time.get_ticks()
-            time.sleep(.2)
+            time.sleep(1)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -80,6 +82,10 @@ class grafico:
             clock = pygame.time.Clock()
             cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
             values = self.read_values()
+            self.velocidad_file.write("%f \n"%float(self.acelerometro.velocidad_temp))
+            self.orientacion_file.write("%f \n"%float(self.acelerometro.valor_giro_abs))
+            print self.acelerometro.ultrasonido
+            #print self.acelerometro.valor_giro_abs
             #print values
             x_angle = values[0]
             y_angle = values[1]
