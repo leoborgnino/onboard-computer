@@ -57,9 +57,8 @@ class grafico:
         glLightfv(GL_LIGHT0, GL_AMBIENT, (0.3, 0.3, 0.3, 1.0));
 
     def read_values(self):
-        #self.acelerometro.obtener_datos()
+        self.acelerometro.obtener_datos()
         return [self.acelerometro.x_rotation, self.acelerometro.y_rotation]
-
 
     def run(self):
         pygame.init()
@@ -67,7 +66,7 @@ class grafico:
         decrement = 0
         while True:
             then = pygame.time.get_ticks()
-            time.sleep(1)
+            time.sleep(.1)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
@@ -84,7 +83,7 @@ class grafico:
             values = self.read_values()
             self.velocidad_file.write("%f \n"%float(self.acelerometro.velocidad_temp))
             self.orientacion_file.write("%f \n"%float(self.acelerometro.valor_giro_abs))
-            print self.acelerometro.ultrasonido
+            #print self.acelerometro.ultrasonido
             #print self.acelerometro.valor_giro_abs
             #print values
             x_angle = values[0]

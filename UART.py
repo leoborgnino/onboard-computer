@@ -1,10 +1,14 @@
-import serial
 
+import serial
+import serialEmulator
 
 class UART:
 
-	def __init__(self,PUERTO_SERIE,BAUDRATE):
-		self.__ser = serial.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)
+	def __init__(self,PUERTO_SERIE,BAUDRATE,SIM_MODE):
+		if (SIM_MODE == 1):
+			self.__ser = serialEmulator.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)			   
+		else:
+			self.__ser = serial.Serial(PUERTO_SERIE,BAUDRATE,bytesize=8,parity='N', stopbits=1)
 		self.__ser.close()
 		self.__ser.open()
 		self.__flag_in_frame     = False
@@ -44,10 +48,10 @@ class UART:
 	def receive(self,method):
 			### Se bloquea  el metodo  hasta que entran  datos o  vence el
         		### timeout si fue seteado.
-        		in_data_0      = self.__ser.read()
-        		in_data_1      = in_data_0 + self.__ser.read(self.__ser.inWaiting())
-        		self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
-
+        		#in_data_0      = self.__ser.read() # WARNING
+        		if (self.__ser.inWaiting() > 0):
+        			in_data_1      = self.__ser.read(self.__ser.inWaiting())
+        			self.__in_data = self.__in_data + [ord(n) for n in in_data_1]
 
    			#print "Datos de entrada:", self.__in_data
 

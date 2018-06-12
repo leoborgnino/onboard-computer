@@ -1,3 +1,4 @@
+import time
 from Obj_Head import Obj_Head
 import struct
 import math
@@ -7,6 +8,7 @@ class mpu6050(Obj_Head):
         def __init__(self,com):
 
                 Obj_Head.__init__(self,com,self.save)
+                self.TIME_OUT         = 1
                 self.x_rotation       = 0
                 self.y_rotation       = 0
                 self.__x_gyro         = 0
@@ -24,6 +26,7 @@ class mpu6050(Obj_Head):
         def save(self,datos):
                 i = 0
                 self.__arreglo_datos = []
+                #print datos
                 while(i < len(datos)):
                     cadena = ""
                     while(datos[i]) != 32:
@@ -51,19 +54,21 @@ class mpu6050(Obj_Head):
 
         def obtener_datos(self):
                 self.send(chr(103))
-                while not self.__flag_datos:
+                timeout = time.time() + self.TIME_OUT
+                while not self.__flag_datos and time.time() < timeout:
                         pass
                 self.__flag_datos = 0
-                self.__x_acel = self.__arreglo_datos[0]
-                self.__y_acel = self.__arreglo_datos[1]
-                self.__z_acel = self.__arreglo_datos[2]
-                self.__x_gyro = self.__arreglo_datos[3]
-                self.__y_gyro = self.__arreglo_datos[4]
-                self.__z_gyro = self.__arreglo_datos[5]
-                self.valor_giro_abs = self.__arreglo_datos[6]
-                self.velocidad_temp = self.__arreglo_datos[7]
-                self.ultrasonido[0] = self.__arreglo_datos[8]
-                self.ultrasonido[1] = self.__arreglo_datos[9]
-                self.ultrasonido[2] = self.__arreglo_datos[10]
+                if (time.time() <= timeout):
+                        self.__x_acel = self.__arreglo_datos[0]
+                        self.__y_acel = self.__arreglo_datos[1]
+                        self.__z_acel = self.__arreglo_datos[2]
+                        self.__x_gyro = self.__arreglo_datos[3]
+                        self.__y_gyro = self.__arreglo_datos[4]
+                        self.__z_gyro = self.__arreglo_datos[5]
+                        self.valor_giro_abs = self.__arreglo_datos[6]
+                        self.velocidad_temp = self.__arreglo_datos[7]
+                        self.ultrasonido[0] = self.__arreglo_datos[8]
+                        self.ultrasonido[1] = self.__arreglo_datos[9]
+                        self.ultrasonido[2] = self.__arreglo_datos[10]
                 self.inclinacion()
                 return self.__arreglo_datos

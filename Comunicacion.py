@@ -10,11 +10,10 @@ import Scheduler
 
 class Comunicacion():
 
-	def __init__(self,dev,baud_rate):
-		self.__uart  = UART.UART(dev,baud_rate)
+	def __init__(self,dev,baud_rate,sim_mode):
+		self.__uart  = UART.UART(dev,baud_rate,sim_mode)
 		self.__scheduler = Scheduler.Scheduler()
 		self.q_envio = Queue.Queue()
-			
 
 	def send(self):
 		if not (self.q_envio.empty()):

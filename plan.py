@@ -33,7 +33,7 @@ class plan:
                 newpath[i][j] = self.path[i][j]
         # Minimizar (xi-yi)^2 (yi yi+1)^2
         # Condicion de corte = tolerance
-        change = tolerance        
+        change = tolerance
         while change >= tolerance:
             change = 0.0
             for i in range(1,len(self.path)-1): # Primer y ultimo punto impolutos
@@ -56,7 +56,11 @@ class plan:
             delta = [[-1,  0],  # go up
                      [ 0, -1],  # go left
                      [ 1,  0],  # go down
-                     [ 0,  1]]  # do right
+                     [ 0,  1],  # do right
+                     [ 1,  1],
+                     [ -1,  1],
+                     [  1,  -1],
+                     [ -1,  -1]] 
 
 
         # Elementos de la lista open son del tipo: [f, g, h, x, y]
@@ -94,45 +98,45 @@ class plan:
                     x = next[3]
                     y = next[4]
                     g = next[1]
-
+                if (not resign):
                 # chequeamos si encontramos el objetivo
-
-                if x == self.goal[0] and y == self.goal[1]:
-                    found = True
-                    print '###### A* Busqueda Realizada Exitosamente ######'
-                else:
-                    # Expandimos el elemento seleccionado y anadimos a la lista
-                    for i in range(len(delta)):
-                        x2 = x + delta[i][0]
-                        y2 = y + delta[i][1]
-                        if x2 >= 0 and x2 < len(self.grid) and y2 >= 0 \
-                                and y2 < len(self.grid[0]):
-                            if closed[x2][y2] == 0 and self.grid[x2][y2] == 0:
-                                g2 = g + self.cost
-                                h2 = self.heuristic[x2][y2]
-                                f2 = g2 + h2
-                                open.append([f2, g2, h2, x2, y2])
-                                closed[x2][y2] = 1
-                                self.action[x2][y2] = i
-                count += 1
+                    if x == self.goal[0] and y == self.goal[1]:
+                        found = True
+                        print '###### A* Busqueda Realizada Exitosamente ######'
+                    else:
+                        # Expandimos el elemento seleccionado y anadimos a la lista
+                        for i in range(len(delta)):
+                            x2 = x + delta[i][0]
+                            y2 = y + delta[i][1]
+                            if x2 >= 0 and x2 < len(self.grid) and y2 >= 0 \
+                                    and y2 < len(self.grid[0]):
+                                if closed[x2][y2] == 0 and self.grid[x2][y2] == 0:
+                                    g2 = g + self.cost
+                                    h2 = self.heuristic[x2][y2]
+                                    f2 = g2 + h2
+                                    open.append([f2, g2, h2, x2, y2])
+                                    closed[x2][y2] = 1
+                                    self.action[x2][y2] = i
+                    count += 1
 
         # extraemos el camino
 
         #for i in self.action:
         #   print i
 
-            invpath = []
-            x = self.goal[0]
-            y = self.goal[1]
-            invpath.append([x, y])
-            while x != self.init[0] or y != self.init[1]:
-                x2 = x - delta[self.action[x][y]][0]
-                y2 = y - delta[self.action[x][y]][1]
-                x = x2
-                y = y2
+            if (not resign):
+                invpath = []
+                x = self.goal[0]
+                y = self.goal[1]
                 invpath.append([x, y])
-
-            self.path = []
-            for i in range(len(invpath)):
-                self.path.append(invpath[len(invpath) - 1 - i])
-            #print self.path[i]
+                while x != self.init[0] or y != self.init[1]:
+                    x2 = x - delta[self.action[x][y]][0]
+                    y2 = y - delta[self.action[x][y]][1]
+                    x = x2
+                    y = y2
+                    invpath.append([x, y])
+                self.path = []
+                for i in range(len(invpath)):
+                    self.path.append(invpath[len(invpath) - 1 - i])
+                #print self.path[i]
+            return resign
