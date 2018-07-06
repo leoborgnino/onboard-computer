@@ -8,6 +8,7 @@ class mpu6050(Obj_Head):
         def __init__(self,com):
 
                 Obj_Head.__init__(self,com,self.save)
+                self.error_reading    = 0
                 self.TIME_OUT         = 1
                 self.x_rotation       = 0
                 self.y_rotation       = 0
@@ -27,14 +28,18 @@ class mpu6050(Obj_Head):
                 i = 0
                 self.__arreglo_datos = []
                 #print datos
-                while(i < len(datos)):
-                    cadena = ""
-                    while(datos[i]) != 32:
-                        cadena = cadena + chr(datos[i])
+                try:
+                    while(i < len(datos)):
+                        cadena = ""
+                        while(datos[i]) != 32:
+                            cadena = cadena + chr(datos[i])
+                            i += 1
+                        if cadena != "":
+		        	self.__arreglo_datos.append(cadena)
                         i += 1
-                    if cadena != "":
-		    	self.__arreglo_datos.append(cadena)
-                    i += 1
+                except IndexError as error:
+                        print "Error leyendo MPU6050 data"
+                        self.error_reading = 1
 		#print self.__arreglo_datos
                 self.__flag_datos = 1
 
@@ -58,17 +63,18 @@ class mpu6050(Obj_Head):
                 while not self.__flag_datos and time.time() < timeout:
                         pass
                 self.__flag_datos = 0
-                if (time.time() <= timeout):
+                if (time.time() <= timeout and self.error_reading == 0):
                         self.__x_acel = self.__arreglo_datos[0]
                         self.__y_acel = self.__arreglo_datos[1]
                         self.__z_acel = self.__arreglo_datos[2]
-                        self.__x_gyro = self.__arreglo_datos[3]
-                        self.__y_gyro = self.__arreglo_datos[4]
-                        self.__z_gyro = self.__arreglo_datos[5]
-                        self.valor_giro_abs = self.__arreglo_datos[6]
-                        self.velocidad_temp = self.__arreglo_datos[7]
-                        self.ultrasonido[0] = self.__arreglo_datos[8]
-                        self.ultrasonido[1] = self.__arreglo_datos[9]
-                        self.ultrasonido[2] = self.__arreglo_datos[10]
+                        #self.__x_gyro = self.__arreglo_datos[3]
+                        #self.__y_gyro = self.__arreglo_datos[4]
+                        #self.__z_gyro = self.__arreglo_datos[5]
+                        #self.valor_giro_abs = self.__arreglo_datos[6]
+                        #self.velocidad_temp = self.__arreglo_datos[7]
+                        #self.ultrasonido[0] = self.__arreglo_datos[8]
+                        #self.ultrasonido[1] = self.__arreglo_datos[9]
+                        #self.ultrasonido[2] = self.__arreglo_datos[10]
+                self.error_reading = 0
                 self.inclinacion()
                 return self.__arreglo_datos
