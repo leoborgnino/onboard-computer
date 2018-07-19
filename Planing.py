@@ -90,6 +90,11 @@ class Planing(Obj_Head):
                 if( self.flag_alarm ):
                     print "Generating new path. Error path: %d %d" % (error_path[0], error_path[1])
                     self.path.grid[error_path[0]][error_path[1]] = 1
+                    self.path.grid[error_path[0]][error_path[1]-1] = 1
+                    self.path.grid[error_path[0]][error_path[1]+1] = 1
+                    self.path.grid[error_path[0]-1][error_path[1]] = 1
+                    self.path.grid[error_path[0]-1][error_path[1]-1] = 1
+                    self.path.grid[error_path[0]-1][error_path[1]+1] = 1
                     self.path.init = new_init
                     for j in range(len(self.path.grid)):
                         print self.path.grid[j]
