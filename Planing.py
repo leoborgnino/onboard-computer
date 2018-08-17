@@ -9,12 +9,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 MODE_SIM      = 0
-SCALE_FACTOR  = 35 # Tile step
+SCALE_FACTOR  = 26 # Tile step
 RAD_TO_DEG    = 180.0/math.pi
-MODE_ACCUM    = 0
-PHASE_LIMIT   = 15.0/RAD_TO_DEG
-MODULE_LIMIT  = 35.0/SCALE_FACTOR
-VELOCIDAD     = 35
+MODE_ACCUM    = 1
+PHASE_LIMIT   = 10.0/RAD_TO_DEG
+MODULE_LIMIT  = 200.0/SCALE_FACTOR
+VELOCIDAD     = 45
 
 class Planing(Obj_Head):
 
@@ -51,12 +51,13 @@ class Planing(Obj_Head):
         path_index = [0]
         stop       = False
         while (self.flag_iteration and (stop == False) ):
-            self.flag_iteration = 0
             error_path = [0,0]
             new_init   = [0,0]
             stop = self.path.astar()
-            if ( stop == False ) :
+            if (self.flag_iteration == 0):
                 self.path.smooth(0.5,0.35)
+            self.flag_iteration = 0
+            if ( stop == False ) :
                 path_hard = self.path.path
                 path_soft = self.path.spath
                 vector_phase = 0.
@@ -66,12 +67,14 @@ class Planing(Obj_Head):
                     vector = np.array( [path_soft[i+1][0] - path_soft[i][0],path_soft[i+1][1] - path_soft[i][1] ] )
                     #print " Old : %f New: %f Result: %f " % (vector_phase,np.arctan(vector[1]/vector[0]),np.arctan(vector[1]/vector[0]) - vector_phase)
                     vector_module = vector_module + np.sqrt(np.dot(vector, vector))
+                    delta_phase = abs(vector_phase_old - np.arctan(vector[1]/vector[0]))
                     vector_phase  = vector_phase + np.arctan(vector[1]/vector[0])
-                    if ( (abs(vector_phase) > PHASE_LIMIT  or vector_module > MODULE_LIMIT or (i == len(path_soft)-2)) or (not MODE_ACCUM) ):
-                        datos = [chr(107)] + [chr(int(vector_module*SCALE_FACTOR))] + [chr(VELOCIDAD)] + [chr(1)] + [chr(abs(int(vector_phase*RAD_TO_DEG)))] + [chr(0) if vector_phase*RAD_TO_DEG >= 0 else chr(1)]
+                    if ( (delta_phase > PHASE_LIMIT  or vector_module > MODULE_LIMIT or (i == len(path_soft)-2)) or (not MODE_ACCUM) ):
+                        datos = [chr(107)] + [chr(int(vector_module*SCALE_FACTOR)&0xFF)] + [chr((int(vector_module*SCALE_FACTOR)&0xFF00)>>8)] + [chr(VELOCIDAD)] + [chr(1)] + [chr(abs(int(vector_phase*RAD_TO_DEG)))] + [chr(0) if vector_phase*RAD_TO_DEG >= 0 else chr(1)]
                         print "Avanzar %f centimetros a %f grados" % (vector_module*SCALE_FACTOR,vector_phase*RAD_TO_DEG)      
                         self.commands_file.write("Avanzar %f centimetros a %f grados\n" % (vector_module*SCALE_FACTOR,vector_phase*RAD_TO_DEG))      
                         self.send(datos)
+                        vector_phase_old = vector_phase
                         vector_module = 0.
                         vector_phase = 0.
                         while not self.__flag :
@@ -86,15 +89,39 @@ class Planing(Obj_Head):
                             break
                         else:
                             i += 1
-                    self.__flag = 0
+                        self.__flag = 0
+                    else:
+                        i += 1
                 if( self.flag_alarm ):
                     print "Generating new path. Error path: %d %d" % (error_path[0], error_path[1])
-                    self.path.grid[error_path[0]][error_path[1]] = 1
-                    self.path.grid[error_path[0]][error_path[1]-1] = 1
-                    self.path.grid[error_path[0]][error_path[1]+1] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]-1] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]+1] = 1
+                    if (vector_phase_old >= 45 and vector_phase_old < 135):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]+1] = 1
+                    elif (vector_phase_old < 45 and vector_phase_old > -45):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-1] = 1
+                    elif (vector_phase_old >= 135 or vector_phase_old <= -135):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]+1] = 1
+                    elif (vector_phase_old <= -45 and vector_phase_old > -135):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]+1] = 1
                     self.path.init = new_init
                     for j in range(len(self.path.grid)):
                         print self.path.grid[j]

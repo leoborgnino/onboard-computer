@@ -69,11 +69,11 @@ class mpu6050(Obj_Head):
                         self.__z_acel = self.__arreglo_datos[2]
                         #self.__x_gyro = self.__arreglo_datos[3]
                         #self.__y_gyro = self.__arreglo_datos[4]
-                        #self.__z_gyro = self.__arreglo_datos[5]
-                        #self.valor_giro_abs = self.__arreglo_datos[6]
-                        #self.velocidad_temp = self.__arreglo_datos[7]
-                        #self.ultrasonido[0] = self.__arreglo_datos[8]
-                        #self.ultrasonido[1] = self.__arreglo_datos[9]
+                        #self.__z_gyro = self.__arreglo_datos[3]
+                        self.valor_giro_abs = self.__arreglo_datos[3]
+                        self.velocidad_temp = self.__arreglo_datos[4]
+                        self.ultrasonido[0] = self.__arreglo_datos[5]
+                        self.ultrasonido[1] = self.__arreglo_datos[6]
                         #self.ultrasonido[2] = self.__arreglo_datos[10]
                 self.error_reading = 0
                 self.inclinacion()

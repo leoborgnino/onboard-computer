@@ -30,6 +30,7 @@ class grafico:
     def __init__(self,acelerometro,ultrasonido=False):
         self.velocidad_file = open('velocidad.log','w')
         self.orientacion_file = open('orientacion.log','w')
+        self.ultrasonido_file = open('ultrasonido.log','w')
         self.acelerometro = acelerometro
         self.ultrasonido = ultrasonido
 
@@ -83,6 +84,8 @@ class grafico:
             values = self.read_values()
             self.velocidad_file.write("%f \n"%float(self.acelerometro.velocidad_temp))
             self.orientacion_file.write("%f \n"%float(self.acelerometro.valor_giro_abs))
+            self.ultrasonido_file.write("%f"%(float(self.acelerometro.ultrasonido[0])))
+            self.ultrasonido_file.write(" %f\n"%(float(self.acelerometro.ultrasonido[1])))
             #print self.acelerometro.ultrasonido
             #print self.acelerometro.valor_giro_abs
             #print values
