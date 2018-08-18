@@ -67,7 +67,7 @@ class grafico:
         decrement = 0
         while True:
             then = pygame.time.get_ticks()
-            time.sleep(.1)
+            time.sleep(.05)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
