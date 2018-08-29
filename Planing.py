@@ -55,7 +55,7 @@ class Planing(Obj_Head):
             error_path = [0,0]
             new_init   = [0,0]
             stop = self.path.astar()
-            self.path.smooth(0.5,0.35)
+            self.path.smooth(0.5,0.15)
             self.flag_iteration = 0
             if ( stop == False ) :
                 path_hard = self.path.path
@@ -79,7 +79,7 @@ class Planing(Obj_Head):
                         elif ( vector[0] <= 0. and vector[1] <= 0 ):
                             vector_phase  = vector_phase + np.arctan(vector[1]/vector[0])
                         elif ( vector[0] >= 0. and vector[1] >= 0 ):
-                            vector_phase  = vector_phase - np.arctan(vector[1]/vector[0]) - 180.0/RAD_TO_DEG
+                            vector_phase  = vector_phase + np.arctan(vector[1]/vector[0]) - 180.0/RAD_TO_DEG
                         elif ( vector[0] <= 0. and vector[1] >= 0 ):
                             vector_phase  = vector_phase + np.arctan(vector[1]/vector[0])
                     if ( (delta_phase > PHASE_LIMIT  or vector_module > MODULE_LIMIT or (i == len(path_soft)-2)) or (not MODE_ACCUM) ):
@@ -109,34 +109,46 @@ class Planing(Obj_Head):
                         i += 1
                 if( self.flag_alarm ):
                     print "Generating new path. Error path: %d %d" % (error_path[0], error_path[1])
-                    #if (vector_phase_old >= 45 and vector_phase_old < 135):
-                    self.path.grid[error_path[0]][error_path[1]] = 1
-                    self.path.grid[error_path[0]][error_path[1]-1] = 1
-                    self.path.grid[error_path[0]][error_path[1]+1] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]-1] = 1
-                    self.path.grid[error_path[0]-1][error_path[1]+1] = 1
-                    #elif (vector_phase_old < 45 and vector_phase_old > -45):
-                    #self.path.grid[error_path[0]][error_path[1]] = 1
-                    #self.path.grid[error_path[0]-1][error_path[1]] = 1
-                    #self.path.grid[error_path[0]+1][error_path[1]] = 1
-                    #self.path.grid[error_path[0]][error_path[1]-1] = 1
-                    #self.path.grid[error_path[0]-1][error_path[1]-1] = 1
-                    #self.path.grid[error_path[0]+1][error_path[1]-1] = 1
-                    #elif (vector_phase_old >= 135 or vector_phase_old <= -135):
-                    #    self.path.grid[error_path[0]][error_path[1]] = 1
-                    #    self.path.grid[error_path[0]][error_path[1]-1] = 1
-                    #    self.path.grid[error_path[0]][error_path[1]+1] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]-1] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]+1] = 1
-                    #elif (vector_phase_old <= -45 and vector_phase_old > -135):
-                    #    self.path.grid[error_path[0]][error_path[1]] = 1
-                    #    self.path.grid[error_path[0]][error_path[1]-1] = 1
-                    #    self.path.grid[error_path[0]][error_path[1]+1] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]-1] = 1
-                    #    self.path.grid[error_path[0]+1][error_path[1]+1] = 1
+                    if (vector_phase_old >= -45.0/RAD_TO_DEG and vector_phase_old < 50/RAD_TO_DEG):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]-2][error_path[1]] = 1
+                        self.path.grid[error_path[0]-2][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]-2][error_path[1]+1] = 1
+                    elif (vector_phase_old < 120/RAD_TO_DEG and vector_phase_old >= 50/RAD_TO_DEG):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]-2] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]-2] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-2] = 1
+                    elif (vector_phase_old >= 120/RAD_TO_DEG or vector_phase_old <= -120/RAD_TO_DEG):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]+2][error_path[1]] = 1
+                        self.path.grid[error_path[0]+2][error_path[1]-1] = 1
+                        self.path.grid[error_path[0]+2][error_path[1]+1] = 1
+                    elif (vector_phase_old < -45/RAD_TO_DEG and vector_phase_old > -120/RAD_TO_DEG):
+                        self.path.grid[error_path[0]][error_path[1]] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]] = 1
+                        self.path.grid[error_path[0]][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]+1] = 1
+                        self.path.grid[error_path[0]][error_path[1]+2] = 1
+                        self.path.grid[error_path[0]-1][error_path[1]+2] = 1
+                        self.path.grid[error_path[0]+1][error_path[1]+2] = 1
                     self.path.init = new_init
                     for j in range(len(self.path.grid)):
                         print self.path.grid[j]
@@ -149,8 +161,8 @@ class Planing(Obj_Head):
                     path_index.append(i)
                     self.flag_iteration = 1
 
-        self.all_paths_x.append(np.array(path_hard)[:,0])
-        self.all_paths_y.append(np.array(path_hard)[:,1])
+        self.all_paths_x.append(np.array(path_soft)[:,0])
+        self.all_paths_y.append(np.array(path_soft)[:,1])
         print len(self.all_paths_x)
         print self.all_paths_x
         print path_index

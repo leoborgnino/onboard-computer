@@ -5,7 +5,12 @@ class Arduino:
     def __init__ ( self ):
         self.__flag_in_frame     = False
         self.__flag_flen         = False
-        self.RANDOM_THRS         = 0.0
+        self.RANDOM_THRS         = 0.1
+        self.RANDOM_MODE         = 0
+        self.FIX_MODE            = 1
+        self.ERROR_STEP          = 6
+        self.TOTAL_STEPS         = 100
+        self.contador            = 0
         self.__arduino_id        = 10
         self.__flen              = 0
         self.__in_data           = []
@@ -91,8 +96,9 @@ class Arduino:
         pass
     
     def answer_model (self):
+        self.contador = (self.contador + 1) % self.TOTAL_STEPS
         data_answ = []
-        if (random.random()<self.RANDOM_THRS):
+        if ( (random.random()<self.RANDOM_THRS and self.RANDOM_MODE) or (self.contador == self.ERROR_STEP and self.FIX_MODE)):
             data_answ.append(ord(str(1)))
         else:
             data_answ.append(ord(str(0)))
