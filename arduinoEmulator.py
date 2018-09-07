@@ -8,7 +8,7 @@ class Arduino:
         self.RANDOM_THRS         = 0.1
         self.RANDOM_MODE         = 0
         self.FIX_MODE            = 1
-        self.ERROR_STEP          = 6
+        self.ERROR_STEP          = 11
         self.TOTAL_STEPS         = 100
         self.contador            = 0
         self.__arduino_id        = 10
@@ -96,6 +96,7 @@ class Arduino:
         pass
     
     def answer_model (self):
+        bits_to_send = 4
         self.contador = (self.contador + 1) % self.TOTAL_STEPS
         data_answ = []
         if ( (random.random()<self.RANDOM_THRS and self.RANDOM_MODE) or (self.contador == self.ERROR_STEP and self.FIX_MODE)):
@@ -104,6 +105,26 @@ class Arduino:
             data_answ.append(ord(str(0)))
         print data_answ
         #print len(data_answ)
+        data_answ.append(ord(' '))
+        # Fase
+        for i in range(bits_to_send):
+            data_answ.append(ord(str(0.150)[i]))
+        data_answ.append(ord(' '))
+        #random derecho o izquierdoz
+        if (random.random() < 0.5):
+            for i in range(bits_to_send):
+                data_answ.append(ord(str(30.00)[i]))
+            data_answ.append(ord(' '))
+            for i in range(bits_to_send):
+                data_answ.append(ord(str(100.0)[i]))
+            data_answ.append(ord(' '))
+        else:
+            for i in range(bits_to_send):
+                data_answ.append(ord(str(100.0)[i]))
+            data_answ.append(ord(' '))
+            for i in range(bits_to_send):
+                data_answ.append(ord(str(30.00)[i]))
+            data_answ.append(ord(' '))            
         data_answ.append(ord(' '))
         data_answ.append(self.__arduino_id)
         return data_answ
