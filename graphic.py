@@ -82,6 +82,12 @@ class grafico:
             clock = pygame.time.Clock()
             cube = Cube((0.0, 0.0, 0.0), (.5, .6, .5))
             values = self.read_values()
+            print "***************************"
+            print "****** VALORES GPS ********"
+            print "***************************"
+            print self.acelerometro.GPS[0]
+            print self.acelerometro.GPS[1]
+            print "***************************"
             self.velocidad_file.write("%f \n"%float(self.acelerometro.velocidad_temp))
             self.orientacion_file.write("%f \n"%float(self.acelerometro.valor_giro_abs))
             self.ultrasonido_file.write("%f"%(float(self.acelerometro.ultrasonido[0])))
