@@ -60,11 +60,17 @@ class plan:
                      [ 1,  1],
                      [ -1,  1],
                      [  1,  -1],
-                     [ -1,  -1]] 
-
-
+                     [ -1,  -1]]
+            # Adaptar
+            for i in range(len(self.grid)-1):
+                for j in range(len(self.grid[0])-1):
+                    if (i > 1) and (j > 1):
+                        if (self.grid[i][j] == 0):
+                            if (self.grid[i][j+1] and self.grid[i][j-1]):
+                                self.grid[i][j] = 1
+                            if (self.grid[i-1][j] and self.grid[i+1][j]):
+                                self.grid[i][j] = 1
         # Elementos de la lista open son del tipo: [f, g, h, x, y]
-
             closed = [[0 for row in range(len(self.grid[0]))]
                       for col in range(len(self.grid))]
             self.action = [[0 for row in range(len(self.grid[0]))]
